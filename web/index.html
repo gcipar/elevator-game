@@ -76,7 +76,225 @@
         }
         
         .instructions {
+     <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        
+        #gameContainer {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #gameCanvas {
+            width: 100%;
+            height: 500px;
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        #gameUI {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        #score, #lives {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #startButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #startButton:hover {
+            background-color: #45a049;
+        }
+        
+        #resetButton {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        #resetButton:hover {
+            background-color: #da190b;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+        
+        /* Modal styles */
+        #startModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        #startModalContent {
+            background: #fff;
+            padding: 32px 24px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 320px;
+        }
+        
+        #playerName {
+            font-size: 18px;
+            padding: 8px;
+            margin-bottom: 16px;
+            width: 200px;
+        }
+        
+        .level-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .level-btn {
+            padding: 10px 18px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #4CAF50;
+            background: #e8f5e9;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        
+        .level-btn.selected, .level-btn:hover {
+            background: #4CAF50;
+            color: #fff;
+        }
+        
+        #modalStartBtn {
+            margin-top: 10px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        #modalStartBtn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div id="startModal">
+        <div id="startModalContent">
+            <h2>Welcome to Elevator Game!</h2>
+            <input id="playerName" type="text" placeholder="Enter your name" />
+            <div class="level-buttons">
+                <button class="level-btn" data-level="1">Level 1</button>
+                <button class="level-btn" data-level="2">Level 2</button>
+                <button class="level-btn" data-level="3">Level 3</button>
+            </div>
+            <button id="modalStartBtn" disabled>Start Game</button>
+        </div>
+    </div>
+    <div id="gameContainer" style="display:none;">
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameUI">
+            <div id="score">Score: 0</div>
+            <div id="lives">❤️❤️❤️</div>
+            <button id="startButton" class="button">Start</button>
+            <button id="resetButton" class="button">Reset</button>
+        </div>
+    </div>
+    <div class="instructions">
+        <h2>How to Play</h2>
+        <p>Move your mouse up and down to control the elevator.</p>
+        <p>Pick up passengers and deliver them to their desired floors.</p>
+        <p>Each successful delivery earns you 10 points!</p>
+    </div>
+    
+    <script src="game.js"></script>
+    <script>
+        // Modal logic
+        let selectedLevel = null;
+        const playerNameInput = document.getElementById('playerName');
+        const levelBtns = document.querySelectorAll('.level-btn');
+        const modalStartBtn = document.getElementById('modalStartBtn');
+        const startModal = document.getElementById('startModal');
+        const gameContainer = document.getElementById('gameContainer');
+
+        playerNameInput.addEventListener('input', checkModalReady);
+        levelBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                levelBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedLevel = parseInt(btn.getAttribute('data-level'));
+                checkModalReady();
+            });
+        });
+        function checkModalReady() {
+            if (playerNameInput.value.trim() && selectedLevel) {
+                modalStartBtn.disabled = false;
+            } else {
+                modalStartBtn.disabled = true;
+            }
+        }
+        modalStartBtn.addEventListener('click', () => {
+            startModal.style.display = 'none';
+            gameContainer.style.display = '';
+            // Proslijedi ime i razinu igri
+            window.startElevatorGame(playerNameInput.value.trim(), selectedLevel);
+        });
+    </script>
+</body>
+</html>        margin-top: 20px;
             text-align: center;
             color: #666;
         }

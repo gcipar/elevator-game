@@ -1,5 +1,7 @@
 class ElevatorGame {
-    constructor() {
+    constructor(playerName = "Player", level = 1) {
+        this.playerName = playerName;
+        this.level = level;
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.scoreElement = document.getElementById('score');
@@ -16,13 +18,13 @@ class ElevatorGame {
         this.score = 0;
         this.lives = 3;
         this.elevatorPosition = 1;
-        this.numberOfFloors = 5;
+        this.numberOfFloors = 5 + (level - 1) * 2; // Level 1: 5, Level 2: 7, Level 3: 9
         this.floorHeight = this.canvas.height / this.numberOfFloors;
         this.elevatorWidth = 40;
         this.elevatorHeight = this.floorHeight;
         this.passengers = [];
         this.lastPassengerTime = 0;
-        this.passengerInterval = 3000; // 3 sekunde
+        this.passengerInterval = 3000 - (level - 1) * 500; // Brže na višim razinama
         
         // Event listeners
         this.startButton.addEventListener('click', () => this.startGame());
@@ -31,6 +33,7 @@ class ElevatorGame {
         
         // Inicijalni crtež
         this.draw();
+        this.updateUI();
     }
     
     resizeCanvas() {
@@ -75,7 +78,7 @@ class ElevatorGame {
     }
     
     updateUI() {
-        this.scoreElement.textContent = this.score;
+        this.scoreElement.textContent = `${this.playerName}: ${this.score}`;
         this.livesElement.textContent = '❤️'.repeat(this.lives);
     }
     
@@ -178,7 +181,7 @@ class ElevatorGame {
     }
 }
 
-// Inicijaliziraj igru kada se stranica učita
-window.addEventListener('load', () => {
-    new ElevatorGame();
-}); 
+// Funkcija za pokretanje igre s imenom i razinom
+window.startElevatorGame = function(playerName, level) {
+    window.elevatorGame = new ElevatorGame(playerName, level);
+};

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        
+        #gameContainer {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #gameCanvas {
+            width: 100%;
+            height: 500px;
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        #gameUI {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        #score, #lives {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #startButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #startButton:hover {
+            background-color: #45a049;
+        }
+        
+        #resetButton {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        #resetButton:hover {
+            background-color: #da190b;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameUI">
+            <div id="score">Score: 0</div>
+            <div id="lives">❤️❤️❤️</div>
+            <button id="startButton" class="button">Start</button>
+            <button id="resetButton" class="button">Reset</button>
+        </div>
+    </div>
+    <div class="instructions">
+        <h2>How to Play</h2>
+        <p>Move your mouse up and down to control the elevator.</p>
+        <p>Pick up passengers and deliver them to their desired floors.</p>
+        <p>Each successful delivery earns you 10 points!</p>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html> 
